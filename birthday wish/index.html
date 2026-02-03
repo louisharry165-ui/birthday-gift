@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Happy 18th Birthday Wifey!</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600&display=swap');
+
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #fff5f8; font-family: 'Poppins', sans-serif; }
+        .screen { display: none; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: center; position: absolute; text-align: center; padding: 20px; box-sizing: border-box; }
+        .active { display: flex; animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        /* Emoji Animations */
+        .big-emoji { font-size: 80px; animation: bounce 2s infinite; margin-bottom: 10px; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+        /* Card Design */
+        .card { background: white; padding: 30px; border-radius: 40px; box-shadow: 0 15px 35px rgba(255, 183, 197, 0.3); width: 90%; max-width: 350px; display: flex; flex-direction: column; align-items: center; border: 2px solid #fff; }
+
+        /* Realistic Cake */
+        .cake { position: relative; width: 140px; height: 90px; background: #fce4ec; border-radius: 15px 15px 5px 5px; margin-top: 40px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .cake::before { content: ''; position: absolute; width: 100%; height: 30px; background: #ff85a2; top: 25px; left: 0; }
+        .cake::after { content: ''; position: absolute; width: 110%; height: 15px; background: #fff; bottom: -5px; left: -5%; border-radius: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        
+        .candle { position: absolute; width: 10px; height: 40px; background: #ffeb3b; top: -40px; left: 65px; border-radius: 5px; border-top: 4px solid #f44336; }
+        .flame { width: 16px; height: 26px; background: #ff9800; border-radius: 50% 50% 20% 20%; position: absolute; top: -30px; left: -3px; display: none; box-shadow: 0 0 15px #ff9800; animation: flicker 0.1s infinite alternate; }
+        @keyframes flicker { from { transform: scale(1); } to { transform: scale(1.15); } }
+
+        /* Balloons */
+        .balloon-area { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px; }
+        .b-wrap { position: relative; width: 70px; height: 90px; }
+        .balloon { width: 70px; height: 90px; border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%; background: radial-gradient(circle at 30% 30%, #ff85a2, #ff4d79); cursor: pointer; position: absolute; z-index: 2; box-shadow: inset -5px -10px 15px rgba(0,0,0,0.1); animation: float 3s infinite ease-in-out; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .pop-text { font-family: 'Fredoka One', cursive; color: #d81b60; font-size: 18px; display: none; margin-top: 35px; }
+
+        /* UI Elements */
+        .loader-container { width: 70%; height: 10px; background: #eee; border-radius: 20px; margin-top: 20px; overflow: hidden; }
+        .bar { width: 0%; height: 100%; background: #ff4d79; transition: 3s linear; }
+        h1 { font-family: 'Fredoka One', cursive; color: #ad1457; font-size: 24px; margin: 10px 0; }
+        p { color: #880e4f; font-weight: 600; }
+        .btn { background: #ff4d79; color: white; border: none; padding: 12px 30px; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 8px 15px rgba(255, 77, 121, 0.3); margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <div id="s1" class="screen active">
+        <div class="card">
+            <div class="big-emoji">🎁</div>
+            <h1>Wait for it...</h1>
+            <div class="loader-container"><div id="bar" class="bar"></div></div>
+        </div>
+    </div>
+
+    <div id="s2" class="screen">
+        <div class="card">
+            <div class="big-emoji">🐼</div>
+            <h1>Happy 18th Birthday!</h1>
+            <p>To my beautiful Wifey ❤️</p>
+            <button class="btn" onclick="next('s3')">See Surprise ✨</button>
+        </div>
+    </div>
+
+    <div id="s3" class="screen">
+        <div class="card">
+            <h1>Make a Wish! 🎂</h1>
+            <div class="cake">
+                <div class="candle"><div id="flame" class="flame"></div></div>
+            </div>
+            <p id="hint" style="margin-top: 30px;">Tap to light the candle!</p>
+            <button id="cake-btn" class="btn" onclick="handleCake()">Light Candle 🕯️</button>
+        </div>
+    </div>
+
+    <div id="s4" class="screen">
+        <div class="card">
+            <h1>Pop All Balloons! 🎈</h1>
+            <div class="balloon-area">
+                <div class="b-wrap"><div class="balloon" onclick="pop(this, 't1')"></div><div id="t1" class="pop-text">You Are</div></div>
+                <div class="b-wrap"><div class="balloon" onclick="pop(this, 't2')" style="background: radial-gradient(circle at 30% 30%, #f48fb1, #ad1457);"></div><div id="t2" class="pop-text">A Real</div></div>
+                <div class="b-wrap"><div class="balloon" onclick="pop(this, 't3')" style="background: radial-gradient(circle at 30% 30%, #ce93d8, #7b1fa2);"></div><div id="t3" class="pop-text">Cutie</div></div>
+                <div class="b-wrap"><div class="balloon" onclick="pop(this, 't4')" style="background: radial-gradient(circle at 30% 30%, #81d4fa, #0288d1);"></div><div id="t4" class="pop-text">Wifey! ❤️</div></div>
+            </div>
+            <button id="final-btn" class="btn" style="display:none;" onclick="next('s5')">Last Step →</button>
+        </div>
+    </div>
+
+    <div id="s5" class="screen">
+        <div class="card">
+            <div class="big-emoji">💖</div>
+            <h1>I Love You!</h1>
+            <p>Happy 18th Birthday once again. You mean the world to me! ✨</p>
+            <button class="btn" onclick="location.reload()">Replay ❤️</button>
+        </div>
+    </div>
+
+    <script>
+        setTimeout(() => { document.getElementById('bar').style.width = '100%'; setTimeout(() => next('s2'), 3000); }, 500);
+
+        function next(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        let lit = false;
+        function handleCake() {
+            const f = document.getElementById('flame'), b = document.getElementById('cake-btn'), h = document.getElementById('hint');
+            if(!lit) {
+                f.style.display = 'block'; h.innerText = "Now blow it out!"; b.innerText = "Blow Out 🌬️"; lit = true;
+            } else {
+                f.style.display = 'none';
+                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ff4d79', '#ff85a2', '#ffffff'] });
+                h.innerText = "YAYYY! 🎉"; b.innerText = "Pop Balloons →";
+                b.onclick = () => next('s4');
+            }
+        }
+
+        let popped = 0;
+        function pop(el, tid) {
+            el.style.display = 'none';
+            document.getElementById(tid).style.display = 'block';
+            popped++;
+            if(popped === 4) document.getElementById('final-btn').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
